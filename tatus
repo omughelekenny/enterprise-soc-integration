@@ -1,0 +1,52 @@
+[33m6ec6746[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Add SOC lab configs, detection rules and network topology
+[33m71b1502[m Merge and add SOC home lab files
+[33m1ad5fe7[m Initial SOC Home Lab setup
+[33mc3a1887[m Initial SOC Home Lab setup
+[33m3fcde40[m Create attack-scenarios.md
+[33mda17086[m Create demo-scripts.md
+[33m8e1c962[m Create README.md
+[33m78f800b[m Create workflow-diagram.png
+[33mec1cc9b[m Create cortex-analysis.png
+[33m84a10ce[m Create thehive-case.png
+[33m140e2f6[m Create splunk-dashboard.png
+[33m8b7d326[m Create architecture-diagram.png
+[33m2485b78[m Create requirements.txt
+[33m9ed0b8f[m Create enrichment-helpers.py
+[33m56ca7b5[m Create splunk-thehive-alert.py
+[33m6c16449[m Create wazuh-thehive-integration.py
+[33mce3920a[m Delete scripts/scripts directory
+[33md08bdf4[m Create wazuh-thehive-integration.py
+[33m4bb4b0e[m Create README.md
+[33m36a0cf9[m Delete scripts
+[33mc71aa17[m Create scripts
+[33m884e77d[m Create docker-compose.yml
+[33m2f943b7[m Create alert-templates.json
+[33mf866cd3[m Create case-templates.json
+[33m3661011[m Create decoders-example.xml
+[33mb8caad8[m Create rules-example.xml
+[33m478ff0b[m Create dashboards.xml
+[33m482df79[m Create correlation-searches.txt
+[33m99e01e3[m Delete configs/configs/splunk directory
+[33m35f9eb2[m Create correlation-searches.txt
+[33m9a16930[m Create README.md
+[33m45a4f5d[m Create lessons-learned.md
+[33meda918d[m Create troubleshooting.md
+[33m48f0dd9[m Delete docs/docs/use-cases.md
+[33md660e77[m Create lessons-learned.md
+[33ma1c74e0[m Add troubleshooting.md to documentation
+[33m3ee8b1a[m Add use-cases documentation file
+[33mbfe80c2[m Add use-cases.md to documentation
+[33m84b72f8[m Add integration guide documentation
+[33m394bd21[m Add installation guide documentation
+[33m26d2244[m Add architecture documentation file
+[33m5a2bee8[m Delete docs directory
+[33m77ed77a[m Add integration guide documentation
+[33mfcb466d[m Add use-cases documentation file
+[33m5671427[m Add troubleshooting documentation
+[33m685e4aa[m Add troubleshooting documentation file
+[33me335483[m Add lessons learned documentation file
+[33m012301b[m docs/installation-guide.md
+[33m210ffb8[m Delete docs/docs/installation-guide.md
+[33mc7dd47b[m Create installation-guide.md
+[33mde8820f[m Create architecture.md
+[33m6c64160[m Initial commit
