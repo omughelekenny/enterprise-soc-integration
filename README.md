@@ -1,2 +1,2 @@
-# Enterprise SOC Home Lab
-A comprehensive SOC home lab built on VMware.
+# enterprise-soc-integration
+Enterprise Security Operations Center - Integrated SOC lab with TheHive, Cortex, MISP, Splunk, Wazuh, Security Onion, and pfSense
