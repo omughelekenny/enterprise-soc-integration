@@ -1,0 +1,69 @@
+version: "3.8"
+
+networks:
+  security_network:
+    external: true
+  backend:
+
+services:
+  elasticsearch:
+    image: elasticsearch:7.17.9
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    volumes:
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
+    networks:
+      - backend
+      - security_network
+    restart: unless-stopped
+
+  cassandra:
+    image: cassandra:4.0
+    container_name: cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=thehive
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=128M
+    volumes:
+      - ./data/cassandra:/var/lib/cassandra
+    networks:
+      - backend
+      - security_network
+    restart: unless-stopped
+
+  thehive:
+    image: strangebee/thehive:5.2
+    container_name: thehive
+    depends_on:
+      - cassandra
+      - elasticsearch
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./data/thehive:/opt/thehive/data
+      - ./thehive-application.conf:/etc/thehive/application.conf
+    networks:
+      - backend
+      - security_network
+    restart: unless-stopped
+    command: "--no-config-secret"
+
+  cortex:
+    image: thehiveproject/cortex:3.1.7
+    container_name: cortex
+    depends_on:
+      - cassandra
+      - elasticsearch
+    ports:
+      - "9001:9001"
+    volumes:
+      - ./data/cortex:/var/cortex
+      - ./cortex-application.conf:/etc/cortex/application.conf
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - backend
+      - security_network
+    restart: unless-stopped

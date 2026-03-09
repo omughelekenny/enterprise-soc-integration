@@ -1,0 +1,60 @@
+version: "3.8"
+
+networks:
+  security_network:
+    external: true
+  backend:
+
+services:
+  redis:
+    image: redis:7
+    # Added command to set the password on the Redis server
+    command: redis-server --requirepass redispassword
+    networks:
+      - backend
+
+  db:
+    image: mariadb:10.11
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: misp
+      MYSQL_USER: misp
+      MYSQL_PASSWORD: misppass
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - backend
+
+  misp-core:
+    image: ghcr.io/misp/misp-docker/misp-core:latest
+    depends_on:
+      - redis
+      - db
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      MYSQL_HOST: db
+      MYSQL_DATABASE: misp
+      MYSQL_USER: misp
+      MYSQL_PASSWORD: misppass
+      REDIS_HOST: redis
+      # Added variable so MISP knows the password to the Redis container
+      REDIS_PASSWORD: redispassword
+      MISP_BASEURL: https://localhost:8443
+    volumes:
+      - misp-data:/var/www/MISP
+    networks:
+      - backend
+      - security_network
+
+  misp-modules:
+    image: ghcr.io/misp/misp-docker/misp-modules:latest
+    container_name: misp-modules
+    hostname: misp-modules
+    networks:
+      - backend
+
+volumes:
+  mysql-data:
+  misp-data:
