@@ -1,0 +1,4 @@
+index=main EventCode=4625
+| stats count as Failed_Attempts by Account_Name, src_ip
+| where Failed_Attempts > 5
+| sort -Failed_Attempts

@@ -1,0 +1,8 @@
+index=main EventCode=4672
+| eval sensitive=if(match(PrivilegeList,"SeDebugPrivilege|SeImpersonatePrivilege|SeTcbPrivilege|SeBackupPrivilege"),
+    "YES-INVESTIGATE","Standard")
+| stats count as logons, values(PrivilegeList) as privileges, values(ComputerName) as machines by SubjectUserName
+| where sensitive="YES-INVESTIGATE"
+| where NOT SubjectUserName="SYSTEM"
+| where NOT match(SubjectUserName,"\\$$")
+| sort -logons

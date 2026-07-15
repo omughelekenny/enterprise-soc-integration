@@ -1,0 +1,13 @@
+index=main EventCode=4769
+| rex field=_raw "Account Name:\s+(?<acct_name>[^\r\n]+)"
+| rex field=_raw "Client Address:\s+(?<client_ip>[^\r\n]+)"
+| rex field=_raw "Ticket Encryption Type:\s+(?<enc_type>0x\w+)"
+| eval suspicion=case(
+    match(client_ip, "192.168.1"), "HIGH - Attack Subnet",
+    enc_type="0x17", "HIGH - RC4 Anomaly",
+    match(acct_name, "Administrator") AND NOT match(client_ip, "::1"), "MEDIUM - Admin External",
+    true(), "Normal"
+  )
+| where suspicion!="Normal"
+| stats count as Requests, values(enc_type) as Encryption, values(suspicion) as Alert_Level by acct_name, client_ip
+| sort -Requests

@@ -1,0 +1,7 @@
+index=main EventCode=4662
+| rex field=_raw "Properties:\s+(?<props>[^\r\n]+)"
+| where match(props, "1131f6aa|1131f6ad")
+| rex field=_raw "Account Name:\s+(?<dc_user>[^\r\n]+)"
+| where NOT match(dc_user, "\\$$")
+| table _time, dc_user, props, ComputerName
+| sort -_time

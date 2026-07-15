@@ -1,0 +1,14 @@
+index=main EventCode=4625
+| rex field=_raw "Source Network Address:\s+(?<src_ip>[^\r\n]+)"
+| where Account_Name="Administrator"
+| stats count as failed_attempts by Account_Name, src_ip
+| where failed_attempts>=5
+| join type=inner Account_Name
+    [search index=main EventCode=4624 Account_Name="Administrator"
+    | stats count as success_count by Account_Name]
+| eval risk_level=case(
+    failed_attempts>=20,"CRITICAL - High Volume Brute Force Success",
+    failed_attempts>=10,"HIGH - Brute Force Success",
+    failed_attempts>=5,"MEDIUM - Suspicious Login After Failures"
+)
+| table Account_Name src_ip failed_attempts success_count risk_level
