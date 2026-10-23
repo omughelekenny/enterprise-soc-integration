@@ -95,7 +95,36 @@ Built SOC Lab Health Monitor dashboard with 5 panels:
 | pfSense | Community Edition |
 | Windows Server | 2025 |
 | Windows 11 | Pro |
+  
+---
+
+# Project 02 — Active Directory IAM & Brute-Force Defense
+
+### Overview
+Hardened domain authentication against automated credential-stuffing and password-spraying attacks across `lab.local`. Configured and deployed a centralized Account Lockout GPO, enabled subcategory auditing on the primary domain controller (`DC`), and validated detection telemetry through simulated endpoint attacks.
+
+### Verification Date
+October 2026
+
+### Implementation Steps
+* **Policy Hardening (`DC`):** Configured Account Lockout threshold to 5 invalid attempts, with a 30-minute lockout duration and counter reset window.
+* **Audit Policy Configuration:** Enabled subcategory auditing for Account Lockout (Success/Failure) via `auditpol` to ensure generation of Windows Security Event ID 4740.
+* **Endpoint Validation (`IT-WS01`):** Generated sequential authentication failures using test user `LAB\john.doe`. Observed Windows 11 exponential retry throttling followed by hard lockout on the 6th attempt.
+* **Telemetry Verification:** Queried Security event logs on `DC` using PowerShell (`Get-WinEvent`), correlating Event ID 4625 (Failed Logon) with Event ID 4740 (Account Lockout) and confirming the originating workstation (`IT-WS01`).
 
 ---
 
-Next: Project 02 — Active Directory Attack Detection (DCSync, Golden Ticket, Pass-the-Hash)
+### Verification Evidence
+
+#### 1. Group Policy Lockout Settings (`DC`)
+![GPO Configuration](EVIDENCE%20PROJECT.png)
+
+#### 2. Workstation Lockout State (`IT-WS01`)
+![Endpoint Lockout](EVIDENCE.jpg)
+
+#### 3. Security Event Log Correlation (`DC` Event 4740)
+![SIEM Event 4740](SEIM_EVENTS.jpg)
+
+---
+
+Next: Project 03 — Enterprise AI Security & Shadow AI Governance
