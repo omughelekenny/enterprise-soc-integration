@@ -127,4 +127,27 @@ October 2026
 
 ---
 
-Next: Project 03 — Enterprise AI Security & Shadow AI Governance
+# Project 03 — Enterprise AI Security & Shadow AI Governance
+
+### Overview
+Implemented technical controls and governance policies aligned with NIST AI RMF 1.0 and OWASP Top 10 for Large Language Models (LLMs) to prevent unauthorized Shadow AI usage and corporate data leakage across the `lab.local` domain.
+
+### Verification Date
+October 2026
+
+### Implementation Steps
+* **AI Risk Assessment:** Mapped organizational AI risks against OWASP LLM02 (Sensitive Information Disclosure) and MITRE ATLAS to identify corporate data exfiltration vectors via external AI APIs.
+* **DNS Sinkhole Configuration (`DC`):** Created primary DNS zones on the domain controller (`192.168.2.10`) for unauthorized external AI endpoints (`api.openai.com`, `api.deepseek.com`, `huggingface.co`) pointing records to `0.0.0.0`[span_2](start_span)[span_2](end_span).
+* **Endpoint Validation (`IT-WS01`):** Flushed DNS caches and performed domain resolution lookups from a workstation, confirming that requests to unauthorized AI endpoints resolve to `0.0.0.0`, blocking outbound data exfiltration[span_3](start_span)[span_3](end_span).
+
+---
+
+### Verification Evidence
+
+#### 1. Primary DNS Sinkhole Zones (`DC`)
+![AI DNS Sinkhole](evidence/project-03/AI_DNS_SINKHOLE.png)
+
+#### 2. Endpoint AI Domain Resolution Block (`IT-WS01`)
+![Shadow AI Blocked](evidence/project-03/SHADOW_AI_BLOCKED.png)
+
+---
