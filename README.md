@@ -1,153 +1,167 @@
 # Enterprise SOC Home Lab
-A comprehensive enterprise-grade SOC home lab built on VMware Workstation, simulating a full corporate environment for blue team training and detection engineering.
 
-# Tools
-- Splunk, Wazuh, TheHive, Cortex, MISP, pfSense, Security Onion, FLARE VM
+I built this home lab using VMware Workstation to practise cybersecurity skills in an environment that simulates a small enterprise network. I use it to learn how to configure security tools, monitor events, investigate suspicious activity, and test security controls.
+
+## Tools I Use
+
+* Splunk Enterprise
+* Wazuh
+* TheHive and Cortex
+* MISP
+* pfSense
+* Security Onion
+* FLARE-VM
+
+## Lab Infrastructure
+
+| Component | IP Address | Purpose |
+| :--- | :--- | :--- |
+| Splunk SIEM | 192.168.6.2 | Log collection and analysis |
+| Wazuh Manager | 192.168.3.5 | Endpoint monitoring and security alerts |
+| TheHive | 192.168.6.3:9000 | Case management |
+| Cortex | 192.168.6.3:9001 | Automated analysis |
+| MISP | 192.168.6.3:443 | Threat intelligence |
+| pfSense | 192.168.6.1 | Firewall and network security |
+| Domain Controller | 192.168.2.10 | Active Directory and DNS |
+| IT-WS01 | 192.168.2.20 | Windows workstation |
+| HR-WS01 | 192.168.2.21 | Windows workstation |
+
 ---
 
- Lab Infrastructure
+# Project 01 — Enterprise SOC Lab Deployment
 
-| Component | IP Address | Role | Status |
-|-----------|-----------|------|--------|
-| Splunk SIEM | 192.168.6.2 | Log aggregation & correlation | ✅ Active |
-| Wazuh Manager | 192.168.3.5 | XDR / HIDS | ✅ Active |
-| TheHive | 192.168.6.3:9000 | Case management | ✅ Active |
-| Cortex | 192.168.6.3:9001 | Automated enrichment | ✅ Active |
-| MISP | 192.168.6.3:443 | Threat intelligence | ✅ Active |
-| pfSense | 192.168.1.1 | Firewall / Network segmentation | ✅ Active |
-| DC (lab.local) | 192.168.2.10 | Active Directory | ✅ Active |
-| IT-WS01 | 192.168.2.20 | Domain workstation | ✅ Active |
-| HR-WS01 | 192.168.2.21 | Domain workstation | ✅ Active |
-| SALES-WS01 | 192.168.2.40 | Domain workstation | ⚠️ Known Issue |
+## Overview
 
----
+I set up an enterprise-style SOC lab in VMware Workstation and connected the different systems across my lab networks. The goal was to get the main security tools communicating and to practise monitoring activity across Windows endpoints, the domain controller, and the firewall.
 
-# Project 01 — Enterprise SOC Lab: Full Stack Deployment
+## What I Worked On
 
- Overview
-Deployed and verified a fully operational enterprise SOC home lab simulating a real corporate environment. Every component was configured, tested, and validated end-to-end.
+* Checked connectivity between virtual machines across the lab subnets.
+* Troubleshot ICMP connectivity between domain workstations.
+* Configured a Group Policy Object for the lab firewall policy.
+* Checked Wazuh agent status on the Windows systems.
+* Reviewed log ingestion in Splunk and checked that events were coming from multiple hosts.
+* Verified that TheHive, Cortex, and MISP services were running.
 
-# Verification Date
+## Current Status
+
+The main lab services are running. I also documented a known issue with the SALES-WS01 hostname and its machine account in Active Directory.
+
+## Verification Date
+
 May 2026
 
-# Phase 1 — Network Topology Verification
-- Confirmed all VMs reachable across three subnets: 192.168.2.x, 192.168.3.x, 192.168.6.x
-- Fixed ICMP connectivity between domain workstations via GPO
-- Deployed SOC-Lab-Firewall-Policy GPO to lab.local domain
-
-**Known Issue:** SALES-WS01 hostname mismatch (DESKTOP-KT74UB2 vs SALES-WS01). Machine account corrupted in AD. No impact on lab exercises.
-
-# Phase 2 — Wazuh Agent Health Check
-
-| ID | Agent | OS | Version | Status |
-|----|-------|----|---------|--------|
-| 003 | DC | Windows Server 2025 | v4.14.3 | ✅ Active |
-| 004 | Fileserver | Windows Server 2025 | v4.14.3 | ✅ Active |
-| 005 | Webserver | - | v4.14.3 | ✅ Active |
-| 007 | IT-WS01 | Windows 11 Pro | v4.7.0 | ✅ Active |
-| 009 | HR-WS01 | Windows 11 Pro | v4.7.0 | ✅ Active |
-
-# Phase 3 — Splunk Log Pipeline Verification
-- Resolved inputs.conf misconfiguration (invalid start_position key)
-- Applied Event ID whitelist to reduce log volume
-- Confirmed 45,625 events ingested across 5 hosts in 24 hours
-
-| Index | Host | Events (24h) |
-|-------|------|-------------|
-| main | FILESERVER | ~19,000 |
-| main | DC | ~18,000 |
-| main | IT-WS01 | ~500 |
-| main | HR-WS01 | ~500 |
-| firewall | pfSense (192.168.6.1) | Active |
-
-# Phase 4 — TheHive + Cortex + MISP Verification
-- TheHive 5.2 running on port 9000
-- Cortex 3.1.7 running on port 9001
-- MISP 2.5.31 running on port 443
-- All services running as Docker containers on 192.168.6.3
-
-# Phase 5 — pfSense Firewall Rule Audit
-
-| Rule | Interface | Action |
-|------|-----------|--------|
-| Block KALI → WAZUH | KALI | ✅ Applied |
-| Block KALI → SPLUNK | KALI | ✅ Applied |
-| Block VICTIM → KALI | VICTIM | ✅ Applied |
-| Block VICTIM → SPLUNK | VICTIM | ✅ Applied |
-
-# Phase 6 — Splunk SOC Health Dashboard
-Built SOC Lab Health Monitor dashboard with 5 panels:
-- Log Volume by Host
-- Firewall Events 24h
-- Top Security Event IDs
-- Failed Logon Attempts by Host
-- Event Timeline 24h
-
-# Tools & Versions
-
-| Tool | Version |
-|------|---------|
-| Wazuh Manager | v4.14.3 |
-| Splunk Enterprise | v10.x |
-| TheHive | v5.2 |
-| Cortex | v3.1.7 |
-| MISP | v2.5.31 |
-| pfSense | Community Edition |
-| Windows Server | 2025 |
-| Windows 11 | Pro |
-  
 ---
 
-# Project 02 — Active Directory IAM & Brute-Force Defense
+# Project 02 — Active Directory Account Lockout
 
-### Overview
-Hardened domain authentication against automated credential-stuffing and password-spraying attacks across `lab.local`. Configured and deployed a centralized Account Lockout GPO, enabled subcategory auditing on the primary domain controller (`DC`), and validated detection telemetry through simulated endpoint attacks.
+## Overview
 
-### Verification Date
+For this project, I worked on improving account security in my lab.local domain. I configured an account lockout policy to help protect user accounts against repeated failed login attempts and tested the security events generated by the process.
+
+## What I Configured and Tested
+
+* Set the account lockout threshold to five failed attempts.
+* Configured a 30-minute lockout duration and counter reset period.
+* Enabled auditing for account lockout events.
+* Tested failed login attempts from the IT-WS01 workstation.
+* Used PowerShell to check Windows Security logs on the domain controller.
+* Checked for Event ID 4740, which records an account lockout.
+
+## Verification Date
+
 October 2026
 
-### Implementation Steps
-* **Policy Hardening (`DC`):** Configured Account Lockout threshold to 5 invalid attempts, with a 30-minute lockout duration and counter reset window.
-* **Audit Policy Configuration:** Enabled subcategory auditing for Account Lockout (Success/Failure) via `auditpol` to ensure generation of Windows Security Event ID 4740.
-* **Endpoint Validation (`IT-WS01`):** Generated sequential authentication failures using test user `LAB\john.doe`. Observed Windows 11 exponential retry throttling followed by hard lockout on the 6th attempt.
-* **Telemetry Verification:** Queried Security event logs on `DC` using PowerShell (`Get-WinEvent`), correlating Event ID 4625 (Failed Logon) with Event ID 4740 (Account Lockout) and confirming the originating workstation (`IT-WS01`).
+## Evidence
+
+1. Group policy account lockout settings:
+![GPO Configuration](evidence/project-02/GPO_Configuration.png)
+
+2. Workstation lockout state:
+![Endpoint Lockout](evidence/project-02/Endpoint_Lockout.png)
+
+3. Security Event ID 4740 from the domain controller:
+![SIEM Event 4740](evidence/project-02/SIEM_Events.jpg)
 
 ---
 
-### Verification Evidence
+# Project 03 — AI Security and Shadow AI Controls
 
-#### 1. Group Policy Lockout Settings (`DC`)
-![GPO Configuration](EVIDENCE%20PROJECT.png)
+## Overview
 
-#### 2. Workstation Lockout State (`IT-WS01`)
-![Endpoint Lockout](EVIDENCE.jpg)
+This project focuses on the security risks that can arise when AI tools are used without proper controls. I worked on identifying potential risks and testing ways to restrict access to unauthorised AI services in my lab environment.
 
-#### 3. Security Event Log Correlation (`DC` Event 4740)
-![SIEM Event 4740](SEIM_EVENTS.jpg)
+## What I Worked On
 
----
+* Reviewed AI security risks using the NIST AI Risk Management Framework and OWASP guidance for large language models.
+* Configured DNS sinkhole zones on the domain controller to block selected AI service endpoints.
+* Tested domain name resolution from IT-WS01.
+* Checked whether requests to the selected endpoints were blocked as expected.
 
-# Project 03 — Enterprise AI Security & Shadow AI Governance
+## Verification Date
 
-### Overview
-Implemented technical controls and governance policies aligned with NIST AI RMF 1.0 and OWASP Top 10 for Large Language Models (LLMs) to prevent unauthorized Shadow AI usage and corporate data leakage across the `lab.local` domain.
-
-### Verification Date
 October 2026
 
-### Implementation Steps
-* **AI Risk Assessment:** Mapped organizational AI risks against OWASP LLM02 (Sensitive Information Disclosure) and MITRE ATLAS to identify corporate data exfiltration vectors via external AI APIs.
-* **DNS Sinkhole Configuration (`DC`):** Created primary DNS zones on the domain controller (`192.168.2.10`) for unauthorized external AI endpoints (`api.openai.com`, `api.deepseek.com`, `huggingface.co`) pointing records to `0.0.0.0`[span_2](start_span)[span_2](end_span).
-* **Endpoint Validation (`IT-WS01`):** Flushed DNS caches and performed domain resolution lookups from a workstation, confirming that requests to unauthorized AI endpoints resolve to `0.0.0.0`, blocking outbound data exfiltration[span_3](start_span)[span_3](end_span).
+## Evidence
 
----
-
-### Verification Evidence
-
-#### 1. Primary DNS Sinkhole Zones (`DC`)
+1. AI DNS Sinkhole (`DC`):
 ![AI DNS Sinkhole](evidence/project-03/AI_DNS_SINKHOLE.png)
 
-#### 2. Endpoint AI Domain Resolution Block (`IT-WS01`)
+2. Shadow AI Blocking Test (`IT-WS01`):
 ![Shadow AI Blocked](evidence/project-03/SHADOW_AI_BLOCKED.png)
 
 ---
+
+# Project 04 — Threat Modeling and Application Security (STRIDE)
+
+## Project Overview
+
+In this project, I worked on creating a formal threat model for the internal web portal and AI assistant architecture within `lab.local`. Using OWASP Threat Dragon, I mapped out data flows, established network trust boundaries, and analyzed potential security risks using the Microsoft STRIDE framework to ensure proper mitigations were designed before deployment.
+
+## Testing Date
+
+October 2026
+
+## What I Worked On
+
+* Architecture Decomposition: Built a Data Flow Diagram (DFD) showing how domain users, web portals, internal AI assistants, file servers, and vector databases interact across subnets.
+* Trust Boundaries: Defined network boundaries at the pfSense firewall between the corporate workstation subnet and server/AI subnets.
+* STRIDE Analysis & Mitigations: Identified potential threats (Spoofing, Tampering, Information Disclosure, Elevation of Privilege) and documented technical mitigations using existing lab controls like Active Directory account lockouts and DNS sinkholes.
+
+## Project Evidence
+
+1. Threat Model Data Flow Diagram (DFD):
+![Threat Model DFD](evidence/project-04/THREAT_MODEL_DFD.png)
+
+2. Executive Threat Model Documentation:
+[Official Threat Model PDF Report](docs/project-04/Threat_Model_Report.pdf)
+
+---
+
+# Project 05 — AI Security Guardrails and Data Protection
+
+## Project Overview
+
+In this project, I worked on a Python script to help protect an AI system from prompt injection and sensitive data exposure. The script checks user inputs for suspicious instructions and sensitive information before they are sent to an AI model.
+
+The project also includes JSON security logs that can be used to monitor blocked requests in Splunk and Wazuh.
+
+## Testing Date
+
+October 2026
+
+## What I Worked On
+
+* Prompt Injection Protection (OWASP LLM01): Added rules to identify suspicious prompts, including attempts to ignore previous instructions, enable developer mode, reveal system prompts, or obtain credentials.
+* Sensitive Data Protection (OWASP LLM02): Added checks for internal IP addresses (`192.168.2.10`), passwords, and personal information that should not be sent to an AI model.
+* Security Logging: Prepared JSON logs containing the timestamp, event type, severity, source user, and action taken. These logs can be used for security monitoring in Splunk and Wazuh.
+
+## Project Evidence
+
+1. Python Script:
+[View the AI security guardrail script](scripts/ai_security_guardrail.py)
+
+2. Test Results:
+The screenshot below shows the guardrail script running on `siem01` and its response to suspicious prompts and sensitive information.
+
+![AI Guardrail Execution](evidence/project-05/AI_GUARDRAIL_EXECUTION.png)
