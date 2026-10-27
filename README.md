@@ -275,3 +275,30 @@ October 2026
 
 2. Rate-Limit and Token Quota Test Results (`siem01`):
 ![AI Rate Limit Test](evidence/project-09/AI_RATE_LIMIT_TEST.png)
+---
+
+# Project 10 — AI Output Sanitization and Malicious Code Defense
+
+## Overview
+
+Securing user inputs is important, but an AI system can also be tricked or hallucinate dangerous code in its responses—such as reverse shell commands or destructive system scripts. If an application blindly displays or executes this output (OWASP LLM05 Improper Output Handling), it introduces severe security risks.
+
+In this project, I wrote an AI output sanitization script (`scripts/ai_output_sanitizer.py`) on `siem01` to inspect final model responses before they are delivered to users.
+
+## What I Worked On
+
+* Created regex detection patterns to identify dangerous execution signatures in AI responses, including Netcat reverse shells (`nc -e /bin/sh`) and destructive file deletions (`rm -rf /`).
+* Configured the sanitizer to block unsafe responses and log `CRITICAL` severity JSON events (`OWASP_LLM05_IMPROPER_OUTPUT_HANDLING`) to `/var/log/ai_guardrail.json`.
+* Tested clean IT administration commands alongside malicious generated scripts to verify that safe responses render normally while dangerous ones are stripped and logged.
+
+## Testing Date
+
+October 2026
+
+## Evidence
+
+1. Python Output Sanitizer Script:
+[View the AI output sanitizer script](scripts/ai_output_sanitizer.py)
+
+2. Output Sanitization Test Results (`siem01`):
+![AI Output Sanitizer](evidence/project-10/AI_OUTPUT_SANITIZER.png)
