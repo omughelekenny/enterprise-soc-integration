@@ -165,3 +165,29 @@ October 2026
 The screenshot below shows the guardrail script running on `siem01` and its response to suspicious prompts and sensitive information.
 
 ![AI Guardrail Execution](evidence/project-05/AI_GUARDRAIL_EXECUTION.png)
+---
+
+# Project 06 — SIEM Alerting for AI Security Events
+
+## Overview
+
+After building the Python guardrail script in Project 05, I wanted to make sure blocked AI requests were visible to the SOC team instead of just sitting in terminal output. In this project, I updated the script to write JSON events to `/var/log/ai_guardrail.json` and ingested those logs into Splunk for security monitoring.
+
+## What I Worked On
+
+* Updated `scripts/ai_security_guardrail.py` to write each JSON log entry to `/var/log/ai_guardrail.json`.
+* Ingested the JSON log file into Splunk using the `_json` source type.
+* Wrote a Splunk search query to filter for `BLOCKED` actions caused by prompt injection (`OWASP_LLM01`) and sensitive data leaks (`OWASP_LLM02`).
+* Created a table view showing the timestamp, domain user, event type, severity, and the blocked prompt snippet.
+
+## Verification Date
+
+October 2026
+
+## Evidence
+
+1. JSON Log File Output (`siem01`):
+![AI JSON Logs](evidence/project-06/AI_JSON_LOGS.png)
+
+2. Splunk Search Results for Blocked AI Prompts:
+![Splunk AI Alerts](evidence/project-06/SPLUNK_AI_ALERTS.png)
