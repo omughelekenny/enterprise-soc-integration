@@ -191,3 +191,31 @@ October 2026
 
 2. Splunk Search Results for Blocked AI Prompts:
 ![Splunk AI Alerts](evidence/project-06/SPLUNK_AI_ALERTS.png)
+---
+
+# Project 07 — AI Knowledge Base Integrity and Data Poisoning Protection
+
+## Overview
+
+In my threat model from Project 04, the internal AI assistant connects to an AI Vector Knowledge Base to read company documents before answering user questions. If an attacker or insider modifies those documents or uploads a file with hidden instructions (indirect prompt injection), the AI can be tricked into giving dangerous advice to employees.
+
+In this project, I wrote a Python scanner (`scripts/rag_integrity_scanner.py`) to check files in the knowledge base before they are indexed by the AI.
+
+## What I Worked On
+
+* Created a sample `rag_knowledge_base` directory containing standard IT and HR policy files alongside a poisoned VPN troubleshooting file.
+* Used Python's `hashlib` to generate SHA-256 hashes for each document to track file integrity and detect tampering.
+* Added checks for indirect prompt injection and data poisoning patterns (OWASP LLM04), such as hidden system overrides or malicious `curl | bash` commands embedded inside text files.
+* Configured the script to flag poisoned documents for quarantine and write JSON alerts to `/var/log/ai_guardrail.json` for Splunk monitoring.
+
+## Testing Date
+
+October 2026
+
+## Evidence
+
+1. Python Scanner Script:
+[View the RAG integrity scanner script](scripts/rag_integrity_scanner.py)
+
+2. Knowledge Base Scan Results (`siem01`):
+![RAG Poisoning Scan](evidence/project-07/RAG_POISONING_SCAN.png)

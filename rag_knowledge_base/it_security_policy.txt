@@ -1,0 +1,1 @@
+IT Policy: Employees must use the internal portal for password resets. Multi-factor authentication is required for all VPN connections.
