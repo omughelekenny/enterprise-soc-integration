@@ -219,3 +219,31 @@ October 2026
 
 2. Knowledge Base Scan Results (`siem01`):
 ![RAG Poisoning Scan](evidence/project-07/RAG_POISONING_SCAN.png)
+---
+
+# Project 08 — Auditing and Hardening Exposed AI Inference Ports
+
+## Overview
+
+Even with a prompt guardrail script in place, an AI system is still vulnerable if the underlying model server (such as Ollama on port 11434 or LM Studio on port 1234) is left listening on all network interfaces (`0.0.0.0`). If those ports are exposed to the network, users or attackers can connect directly to the model API and bypass the security guardrails completely.
+
+In this project, I simulated an exposed AI inference port on `siem01`, wrote a Python port auditing script (`scripts/ai_port_auditor.py`) to detect unauthenticated AI services, and verified that closing the exposed service resolved the alert.
+
+## What I Worked On
+
+* Simulated an exposed Ollama AI API service listening on port `11434` across all interfaces.
+* Wrote a Python socket scanner (`scripts/ai_port_auditor.py`) to check for common local AI and LLM ports (`11434`, `1234`, `7860`, `8000`, `5000`).
+* Configured the script to log `HIGH` severity JSON alerts (`EXPOSED_AI_INFERENCE_PORT`) to `/var/log/ai_guardrail.json` when an open AI port is found.
+* Shut down the exposed listener and re-ran the audit script to confirm the port returned to a closed state.
+
+## Testing Date
+
+October 2026
+
+## Evidence
+
+1. Python Port Auditor Script:
+[View the AI port auditor script](scripts/ai_port_auditor.py)
+
+2. Port Audit and Remediation Results (`siem01`):
+![AI Port Audit](evidence/project-08/AI_PORT_AUDIT.png)
