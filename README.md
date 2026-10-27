@@ -247,3 +247,31 @@ October 2026
 
 2. Port Audit and Remediation Results (`siem01`):
 ![AI Port Audit](evidence/project-08/AI_PORT_AUDIT.png)
+---
+
+# Project 09 — AI Rate Limiting and Token Quota Protection
+
+## Overview
+
+AI models require much more compute power per request than standard web servers. If a user or compromised workstation floods the internal AI API with rapid requests or sends unusually large prompts, it can slow down the server for everyone else (Denial of Service) or drive up API token costs (OWASP LLM10 Unbounded Consumption).
+
+In this project, I wrote a Python rate-limiting and token quota script (`scripts/ai_rate_limiter.py`) on `siem01` to control how many requests and tokens a domain user can send within a 60-second window.
+
+## What I Worked On
+
+* Set a per-user rate limit of 3 requests per 60 seconds and a maximum prompt size of 150 estimated tokens.
+* Added a token estimation check to reject oversized prompts before they reach the AI model.
+* Tested a burst of 4 rapid requests from `LAB\sales_user` to verify that the fourth request is throttled (`HTTP 429`) and logged.
+* Configured the script to write `OWASP_LLM10_RATE_LIMIT_EXCEEDED` and `OWASP_LLM10_TOKEN_QUOTA_EXCEEDED` alerts to `/var/log/ai_guardrail.json` for Splunk monitoring.
+
+## Testing Date
+
+October 2026
+
+## Evidence
+
+1. Python Rate-Limiter Script:
+[View the AI rate-limiter script](scripts/ai_rate_limiter.py)
+
+2. Rate-Limit and Token Quota Test Results (`siem01`):
+![AI Rate Limit Test](evidence/project-09/AI_RATE_LIMIT_TEST.png)
