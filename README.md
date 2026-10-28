@@ -302,3 +302,32 @@ October 2026
 
 2. Output Sanitization Test Results (`siem01`):
 ![AI Output Sanitizer](evidence/project-10/AI_OUTPUT_SANITIZER.png)
+---
+
+# Project 11 — Active Directory IAM Lifecycle (Joiner, Mover, Leaver) and Internal PKI
+
+## Overview
+
+In an enterprise Active Directory environment, managing employee access across their lifecycle—when they join the company, change departments, or leave—is critical for access governance. A common security problem is privilege creep, where an employee moves to a new department and gets new permissions without having their old group memberships removed.
+
+In this project, I built and tested an automated Joiner/Mover/Leaver (JML) workflow and internal certificate check on my Domain Controller (`192.168.2.10`) using PowerShell.
+
+## What I Worked On
+
+* Created dedicated Active Directory Organizational Units (`IAM_HR`, `IAM_IT`, and `IAM_Disabled_Leavers`) and department security groups (`SG_HR_Staff`, `SG_IT_Admins`).
+* **Joiner Process:** Provisioned a new domain user (`s.connor`) inside the `IAM_HR` OU and assigned HR group permissions.
+* **Mover Process:** Simulated an internal transfer from HR to IT by removing the old `SG_HR_Staff` group membership first, adding `SG_IT_Admins`, updating job attributes, and moving the user object to the `IAM_IT` OU.
+* **Leaver Process:** Simulated employee offboarding by stripping all security groups, disabling the account, stamping the account description with a ticket reference and date, and moving the object to `IAM_Disabled_Leavers`.
+* **Internal PKI:** Provisioned and verified an X.509 certificate (`CN=internal-pki.lab.local`) in the Windows Server certificate store to test local PKI management.
+
+## Testing Date
+
+October 2026
+
+## Evidence
+
+1. PowerShell JML Automation Script:
+[View the AD JML lifecycle script](scripts/iam_jml_lifecycle.ps1)
+
+2. Joiner, Mover, Leaver, and PKI Execution Results (`DC 192.168.2.10`):
+![IAM JML Lifecycle](evidence/project-11/IAM_JML_LIFECYCLE.png)
