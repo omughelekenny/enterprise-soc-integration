@@ -360,7 +360,7 @@ October 2026
 ![Vulnerability Remediation Validation](evidence/project-12/VULN_REMEDIATION_VALIDATION.png)
 ---
 
-## Step 5: Natural, Human-Written Documentation for `README.md` (Project 13)
+# (Project 13)
 
 Now open your main `README.md` (`nano README.md`) and add this section at the bottom in your exact personal style:
 
