@@ -331,3 +331,30 @@ October 2026
 
 2. Joiner, Mover, Leaver, and PKI Execution Results (`DC 192.168.2.10`):
 ![IAM JML Lifecycle](evidence/project-11/IAM_JML_LIFECYCLE.png)
+---
+
+# Project 12 — Vulnerability Assessment, Risk Prioritization, and Remediation Validation
+
+## Overview
+
+Finding vulnerabilities with a scanner is only the first half of vulnerability management. In a real environment, findings have to be prioritized based on asset criticality and CVSS risk, remediated in coordination with the infrastructure team, and re-scanned to confirm the fix actually worked.
+
+In this project, I assessed my Domain Controller (`192.168.2.10`) for common network and cryptographic weaknesses, prioritized the findings by risk, applied the configuration fixes, and ran a validation check to confirm remediation.
+
+## What I Worked On
+
+* **Vulnerability Assessment & Prioritization:** Audited `DC` (`192.168.2.10`) for SMB message signing enforcement (NTLM relay risk), legacy SMBv1 status, and deprecated TLS 1.0 server protocols. Ranked each finding by CVSS score and assigned remediation SLAs based on the Domain Controller being a Tier-0 asset.
+* **Remediation Implementation:** Enforced mandatory SMB security signatures (`RequireSecuritySignature`), confirmed SMBv1 was disabled, and disabled TLS 1.0 in the Windows Server SCHANNEL registry.
+* **Post-Remediation Validation:** Re-ran the audit checks after applying the changes to verify that all three controls transitioned to a remediated state.
+
+## Testing Date
+
+October 2026
+
+## Evidence
+
+1. Vulnerability Assessment & Remediation Script:
+[View the vulnerability remediation and validation script](scripts/vuln_assessment_remediation.ps1)
+
+2. Pre-Remediation Findings, Risk Prioritization, and Validation Results (`DC 192.168.2.10`):
+![Vulnerability Remediation Validation](evidence/project-12/VULN_REMEDIATION_VALIDATION.png)
