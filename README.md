@@ -360,13 +360,6 @@ October 2026
 ![Vulnerability Remediation Validation](evidence/project-12/VULN_REMEDIATION_VALIDATION.png)
 ---
 
-# (Project 13)
-
-Now open your main `README.md` (`nano README.md`) and add this section at the bottom in your exact personal style:
-
-```markdown
----
-
 # Project 13 — Multi-SIEM Detection Queries (SPL, KQL, ES|QL) and Event Correlation
 
 ## Overview
