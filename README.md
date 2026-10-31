@@ -358,3 +358,40 @@ October 2026
 
 2. Pre-Remediation Findings, Risk Prioritization, and Validation Results (`DC 192.168.2.10`):
 ![Vulnerability Remediation Validation](evidence/project-12/VULN_REMEDIATION_VALIDATION.png)
+---
+
+## Step 5: Natural, Human-Written Documentation for `README.md` (Project 13)
+
+Now open your main `README.md` (`nano README.md`) and add this section at the bottom in your exact personal style:
+
+```markdown
+---
+
+# Project 13 — Multi-SIEM Detection Queries (SPL, KQL, ES|QL) and Event Correlation
+
+## Overview
+
+A single failed login event is common in any network, so SOC monitoring relies on event correlation to connect multiple events into a clear attack timeline. In addition, different organizations use different SIEM platforms, so it is helpful to know how to write the same detection logic across Splunk, Microsoft Sentinel, and Elastic.
+
+In this project, I built an event correlation use case (`UC-AD-004`) that detects a brute-force login (`Event ID 4625`), followed by a successful login (`Event ID 4624`), followed immediately by the account being added to `Domain Admins` (`Event ID 4728`). I also translated the detection rule across Splunk SPL, Microsoft Sentinel KQL, and Elastic ES|QL, and wrote a structured Tier-2 incident escalation summary.
+
+## What I Worked On
+
+* Built a correlation script (`scripts/siem_correlation_engine.py`) on `siem01` to correlate Windows Security Event IDs `4625`, `4624`, and `4728` across a 10-minute window.
+* Wrote matching detection queries for the same attack pattern in **Splunk SPL**, **Microsoft Sentinel KQL**, and **Elastic ES|QL**.
+* Put together a structured SOC investigation and escalation report (`INC-2026-1028`) detailing the timeline, affected hosts (`DC 192.168.2.10` and `IT-WS01 192.168.2.20`), MITRE ATT&CK mapping, and containment steps.
+
+## Testing Date
+
+October 2026
+
+## Evidence
+
+1. Multi-SIEM Queries (SPL / KQL / ES|QL) & SOC Escalation Report:
+[View the Detection Queries and Escalation Summary](docs/project-13/SIEM_Detection_and_Escalation_Report.md)
+
+2. Event Correlation Engine Script:
+[View the Python correlation script](scripts/siem_correlation_engine.py)
+
+3. Event Correlation Output (`siem01`):
+![SIEM Event Correlation](evidence/project-13/SIEM_EVENT_CORRELATION.png)
