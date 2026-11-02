@@ -405,3 +405,35 @@ October to November 2026
 [View the Lab 13 write-up](Lab-13-AD-BruteForce-PrivEsc/README.md)
 
    ![Splunk Multi-Stage Correlation](Lab-13-AD-BruteForce-PrivEsc/lab13-splunk-correlation.png)
+---
+
+# Project 14 - Detecting Scheduled Task Persistence (Event ID 4698) Across Multi-SIEM (SPL, KQL, ES|QL)
+
+## Overview
+
+After compromising a domain account and escalating privileges in Project 13, attackers set up persistence so they don't lose access if passwords change. A common method on Windows is creating a Scheduled Task that runs as `SYSTEM` (`Event ID 4698`).
+
+## Part 1: Building the Logic
+
+* Built `scripts/ad_persistence_detector.py` on `siem01` to inspect Event ID `4698` telemetry for hidden/encoded PowerShell flags (`-NoP`, `-W Hidden`, `-Enc`) and generate a Tier-2 incident escalation alert (`INC-2026-1102`).
+* Authored detection rules in **Splunk SPL**, **Microsoft Sentinel KQL**, and **Elastic ES|QL**.
+
+## Part 2: Testing It for Real
+
+When I first created a test task on my domain controller (`DC 192.168.2.10`), nothing appeared in Splunk because Windows Server does not audit scheduled task creation by default. 
+I enabled `Other Object Access Events` using `auditpol` on the DC, re-ran the scheduled task creation with an encoded PowerShell payload, and used `rex` in Splunk to parse the embedded XML `<Command>` and `<Arguments>` tags into a unified `Payload_Executed` field. The query immediately flagged the task as `CRITICAL`.
+
+## Testing Date
+
+November 2026
+
+## Evidence
+
+1. Multi-SIEM Queries (SPL / KQL / ES|QL) and Detection Report:
+[View the Scheduled Task Persistence Detection Report](docs/project-14/Scheduled_Task_Persistence_Detection_Report.md)
+
+2. Scheduled Task Persistence Script (Part 1):
+[View the Python persistence detection script](scripts/ad_persistence_detector.py)
+
+3. Live Detection in Splunk (Part 2):
+![Splunk Scheduled Task Persistence Detection](evidence/project-14/SPLUNK_PERSISTENCE_DETECTION.png)
