@@ -364,27 +364,42 @@ October 2026
 
 ## Overview
 
-A single failed login event is common in any network, so SOC monitoring relies on event correlation to connect multiple events into a clear attack timeline. In addition, different organizations use different SIEM platforms, so it is helpful to know how to write the same detection logic across Splunk, Microsoft Sentinel, and Elastic.
+A single failed login is common in any network, so SOC monitoring relies on event correlation to connect multiple events into a clear attack timeline. Different organizations also use different SIEM platforms, so it helps to know how to write the same detection logic in Splunk, Microsoft Sentinel and Elastic.
 
-In this project, I built an event correlation use case (`UC-AD-004`) that detects a brute-force login (`Event ID 4625`), followed by a successful login (`Event ID 4624`), followed immediately by the account being added to `Domain Admins` (`Event ID 4728`). I also translated the detection rule across Splunk SPL, Microsoft Sentinel KQL, and Elastic ES|QL, and wrote a structured Tier-2 incident escalation summary.
+This project has two parts. In Part 1, I built the correlation logic as a Python script on `siem01`, using sample telemetry, to prove the idea: a brute-force login (`Event ID 4625`), followed by a successful login (`Event ID 4624`), followed by the account being added to `Domain Admins` (`Event ID 4728`). In Part 2, I tested the same logic for real. I ran the attack against my own domain controller and built the detection in Splunk.
 
-## What I Worked On
+## Part 1: Building the Logic
 
-* Built a correlation script (`scripts/siem_correlation_engine.py`) on `siem01` to correlate Windows Security Event IDs `4625`, `4624`, and `4728` across a 10-minute window.
-* Wrote matching detection queries for the same attack pattern in **Splunk SPL**, **Microsoft Sentinel KQL**, and **Elastic ES|QL**.
-* Put together a structured SOC investigation and escalation report (`INC-2026-1028`) detailing the timeline, affected hosts (`DC 192.168.2.10` and `IT-WS01 192.168.2.20`), MITRE ATT&CK mapping, and containment steps.
+* Built a correlation script (`scripts/siem_correlation_engine.py`) on `siem01` that chains Event IDs `4625`, `4624` and `4728` from sample data and generates an escalation summary.
+* Wrote the same detection in **Splunk SPL**, **Microsoft Sentinel KQL** and **Elastic ES|QL**.
+* Wrote a structured Tier-2 escalation report (`INC-2026-1028`) with the timeline, affected hosts (`DC 192.168.2.10` and `IT-WS01 192.168.2.20`), MITRE ATT&CK mapping and containment steps.
+
+This part proved the logic, but the script only runs on sample data, so I wanted to see it work against real events.
+
+## Part 2: Testing It for Real
+
+I ran the attack from `192.168.2.20` against the account `j.doe` on my domain controller, then checked whether Splunk caught the full chain.
+
+My first query did not work. Windows records the account differently depending on the event: `j.doe` in the logon events (`4624` and `4625`), but `CN=John Doe,CN=Users,DC=lab,DC=local` in the group change events (`4728` and `4732`). Splunk treated these as two different users, so the three stages never joined. I fixed it by extracting the name with regex and normalizing it, and after that everything correlated into one alert row.
+
+In a real environment I would use an Active Directory identity lookup for this instead of a hardcoded mapping.
+
+[View the full Lab 13 write-up, Splunk query and results](Lab-13-AD-BruteForce-PrivEsc/README.md)
 
 ## Testing Date
 
-October 2026
+October to November 2026
 
 ## Evidence
 
-1. Multi-SIEM Queries (SPL / KQL / ES|QL) & SOC Escalation Report:
+1. Multi-SIEM Queries (SPL / KQL / ES|QL) and SOC Escalation Report:
 [View the Detection Queries and Escalation Summary](docs/project-13/SIEM_Detection_and_Escalation_Report.md)
 
-2. Event Correlation Engine Script:
+2. Event Correlation Engine Script (Part 1):
 [View the Python correlation script](scripts/siem_correlation_engine.py)
 
-3. Event Correlation Output (`siem01`):
+3. Event Correlation Output on `siem01` (Part 1):
 ![SIEM Event Correlation](evidence/project-13/SIEM_EVENT_CORRELATION.png)
+
+4. Live Detection in Splunk (Part 2):
+[View the Lab 13 write-up](Lab-13-AD-BruteForce-PrivEsc/README.md)
