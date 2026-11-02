@@ -403,3 +403,5 @@ October to November 2026
 
 4. Live Detection in Splunk (Part 2):
 [View the Lab 13 write-up](Lab-13-AD-BruteForce-PrivEsc/README.md)
+
+   ![Splunk Multi-Stage Correlation](Lab-13-AD-BruteForce-PrivEsc/lab13-splunk-correlation.png)
