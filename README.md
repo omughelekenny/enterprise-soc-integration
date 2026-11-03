@@ -418,11 +418,9 @@ After compromising a domain account and escalating privileges in Project 13, att
 * Built `scripts/ad_persistence_detector.py` on `siem01` to inspect Event ID `4698` telemetry for hidden/encoded PowerShell flags (`-NoP`, `-W Hidden`, `-Enc`) and generate a Tier-2 incident escalation alert (`INC-2026-1102`).
 * Authored detection rules in **Splunk SPL**, **Microsoft Sentinel KQL**, and **Elastic ES|QL**.
 
-## Part 2: Testing It for Real
+## Part 2:Testing it Real
 
-When I first created a test task on my domain controller (`DC 192.168.2.10`), nothing appeared in Splunk because Windows Server does not audit scheduled task creation by default. 
-I enabled `Other Object Access Events` using `auditpol` on the DC, re-ran the scheduled task creation with an encoded PowerShell payload, and used `rex` in Splunk to parse the embedded XML `<Command>` and `<Arguments>` tags into a unified `Payload_Executed` field. The query immediately flagged the task as `CRITICAL`.
-
+Before testing, Windows Server does not audit scheduled task creation by default, so I first enabled `Other Object Access Events` with `auditpol` on the DC. I then created the scheduled task with an encoded PowerShell payload, and used `rex` in Splunk to parse the embedded XML `<Command>` and `<Arguments>` tags into a unified `Payload_Executed` field. The query returned the task on the first run and flagged it as `CRITICAL`.
 ## Testing Date
 
 November 2026
