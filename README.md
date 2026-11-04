@@ -435,3 +435,25 @@ November 2026
 
 3. Live Detection in Splunk (Part 2):
 ![Splunk Scheduled Task Persistence Detection](evidence/project-14/SPLUNK_PERSISTENCE_DETECTION.png)
+
+---
+
+# Project 15 - Detecting Kerberoasting
+
+## Overview
+
+After Project 13 (initial compromise) and Project 14 (persistence), the next step I tested was Kerberoasting, a way attackers with a valid domain account go after service accounts by requesting their Kerberos tickets and cracking them offline.
+
+I registered a test service account, requested its ticket, and caught it in Splunk by filtering out the normal background noise this event type generates.
+
+[View the full write-up, queries and evidence](docs/project-15/Kerberoasting_Detection_Report.md)
+
+## Evidence
+
+1. Detection Report (SPL, KQL, ES|QL): [View the Kerberoasting Detection Report](docs/project-15/Kerberoasting_Detection_Report.md)
+2. Detection Script: [View the Python script](scripts/kerberoasting_detector.py)
+3. Live Detection in Splunk: ![Splunk Kerberoasting Detection](evidence/project-15/SPLUNK_KERBEROASTING_DETECTION.png)
+
+## Testing Date
+
+November 2026
