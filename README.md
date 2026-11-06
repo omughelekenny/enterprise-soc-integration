@@ -457,3 +457,41 @@ I registered a test service account, requested its ticket, and caught it in Splu
 ## Testing Date
 
 November 2026
+
+---
+
+# Project 16 - Detecting SMB Lateral Movement via Explicit Credentials and Admin Shares (Event ID 4648 & 5140)
+
+## Overview
+
+Once an attacker compromises an account with administrative privileges, a common way to move laterally to other servers is authenticating with explicit credentials (`Event ID 4648`) and mounting default administrative SMB shares such as `ADMIN$` and `C$` (`Event ID 5140`).
+
+Like the earlier Active Directory labs, this project has two parts: first testing the field normalization and correlation logic in Python on `siem01`, and then running the pivot against my domain controller (`DC.lab.local`) and tuning the detection query in Splunk.
+
+## Part 1: Building the Logic
+
+* Built `scripts/lateral_movement_detector.py` on `siem01` to normalize the target identity across `Event ID 4648` (`TargetUserName`) and `Event ID 5140` (`SubjectUserName`), filter out machine account (`$`) traffic, and alert when explicit credentials are used to mount `ADMIN$` or `C$`.
+* Wrote the same correlation logic in **Splunk SPL**, **Microsoft Sentinel KQL** and **Elastic ES|QL**.
+
+## Part 2: Testing It for Real
+
+When I first ran `net use \\DC.lab.local\ADMIN$ /user:LAB\j.doe` on the domain controller, Splunk recorded `Event ID 4648` but did not log any share access events because Windows Server does not audit file shares by default. After enabling `File Share` auditing via `auditpol`, `Event ID 5140` started coming through, along with continuous background noise from machine accounts accessing `IPC$` and `SYSVOL`.
+
+Another issue showed up in `Event ID 4648`: Windows logs two separate `Account Name` fields in the same event (`Subject` for the local user running the command, and `Account Whose Credentials Were Used` for the network identity passed to the target server). A basic regex for `Account Name` pulled the wrong field, so the `4648` and `5140` events did not join under `j.doe`. I updated the SPL query to extract `Target_User` specifically from the `Account Whose Credentials Were Used` section and used `coalesce()` to join it with the `Subject_User` from `Event ID 5140`, while filtering out machine accounts (`$`) and non-admin shares.
+
+[View the full Project 16 write-up, queries and results](docs/project-16/Lateral_Movement_Admin_Shares_Report.md)
+
+## Testing Date
+
+November 2026
+
+## Evidence
+
+1. Multi-SIEM Queries (SPL / KQL / ES|QL) and Detection Report:
+[View the Lateral Movement Detection Report](docs/project-16/Lateral_Movement_Admin_Shares_Report.md)
+
+2. Lateral Movement Correlation Script (Part 1):
+[View the Python lateral movement correlation script](scripts/lateral_movement_detector.py)
+
+3. Live Detection in Splunk (Part 2):
+![Splunk Lateral Movement Detection](evidence/project-16/SPLUNK_LATERAL_MOVEMENT.png)
