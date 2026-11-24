@@ -531,3 +531,38 @@ November 2026
 
 3. Live Detection in Splunk (Part 2):
 ![Splunk Defense Evasion Detection](evidence/project-17/SPLUNK_DEFENSE_EVASION.png)
+
+---
+
+# Project 18 - End-to-End Active Directory Kill-Chain Correlation & Automated Containment Playbook
+
+## Overview
+
+Over Projects 13 through 17, I simulated and detected five sequential stages of an Active Directory attack against `DC.lab.local`: brute-force to privilege escalation, scheduled task persistence, Kerberoasting, SMB lateral movement, and security log clearing.
+
+For Project 18, I tied all five stages into a single master kill-chain correlation query across **Splunk SPL**, **Microsoft Sentinel KQL**, and **Elastic ES|QL**, and built an automated containment playbook to revoke access, remove persistence, and isolate the attacker host.
+
+## Part 1: Automated Containment Playbook
+
+* Built `scripts/ad_automated_containment.py` on `siem01` alongside PowerShell containment commands to disable `j.doe`, strip `Domain Admins` membership, delete `\WindowsUpdaterSvc`, remove the targeted SPN, and block `192.168.2.20` at the firewall.
+
+## Part 2: Master Kill-Chain Correlation in Splunk
+
+* Built a unified Splunk SPL query that groups all nine Windows Security Event IDs (`4625`, `4624`, `4728`, `4698`, `4769`, `4648`, `5140`, `1102`, `4719`) into a chronological attack timeline on `DC.lab.local`.
+
+[View the full Project 18 Master Incident Response Report](docs/project-18/Master_AD_Incident_Response_Report.md)
+
+## Testing Date
+
+November 2026
+
+## Evidence
+
+1. Master Incident Response Report & Multi-SIEM Kill-Chain Queries:
+[View the Master AD Incident Response Report](docs/project-18/Master_AD_Incident_Response_Report.md)
+
+2. Automated Containment Playbook Script (Part 1):
+[View the Python automated containment script](scripts/ad_automated_containment.py)
+
+3. Live Kill-Chain Correlation in Splunk (Part 2):
+![Splunk Master Kill-Chain Correlation](evidence/project-18/SPLUNK_MASTER_KILLCHAIN.png)
