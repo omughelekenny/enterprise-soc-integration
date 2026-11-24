@@ -495,3 +495,39 @@ November 2026
 
 3. Live Detection in Splunk (Part 2):
 ![Splunk Lateral Movement Detection](evidence/project-16/SPLUNK_LATERAL_MOVEMENT.png)
+
+---
+
+# Project 17 - Detecting Defense Evasion: Audit Log Clearing & Policy Tampering (Event ID 1102 & 4719)
+
+## Overview
+
+Once an attacker finishes their objectives on a Domain Controller, they often try to erase local evidence by disabling Windows audit policies (`Event ID 4719`) or wiping the Security Event Log (`Event ID 1102`).
+
+In this project, I tested both techniques on `DC.lab.local` and built a zero-noise detection rule across **Splunk SPL**, **Microsoft Sentinel KQL**, and **Elastic ES|QL**.
+
+## Part 1: Building the Logic
+
+* Built `scripts/defense_evasion_detector.py` on `siem01` to flag `Event ID 1102` and `4719` as immediate P1 alerts (`INC-2026-1124-EVASION`).
+* Authored equivalent detection queries in **Splunk SPL**, **Microsoft Sentinel KQL**, and **Elastic ES|QL**.
+
+## Part 2: Testing It for Real
+
+I modified the `Logon` audit subcategory on `DC.lab.local` via `auditpol` and then cleared the Security Event Log using `wevtutil cl Security`. Even though the local Security log was wiped, Windows automatically generated `Event ID 1102` naming the account that cleared it, and Splunk retained all events forwarded prior to the clear command.
+
+[View the full Project 17 write-up, queries and results](docs/project-17/Defense_Evasion_Log_Clearing_Report.md)
+
+## Testing Date
+
+November 2026
+
+## Evidence
+
+1. Multi-SIEM Queries (SPL / KQL / ES|QL) and Detection Report:
+[View the Defense Evasion Detection Report](docs/project-17/Defense_Evasion_Log_Clearing_Report.md)
+
+2. Defense Evasion Detection Script (Part 1):
+[View the Python defense evasion script](scripts/defense_evasion_detector.py)
+
+3. Live Detection in Splunk (Part 2):
+![Splunk Defense Evasion Detection](evidence/project-17/SPLUNK_DEFENSE_EVASION.png)
